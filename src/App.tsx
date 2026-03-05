@@ -12,7 +12,7 @@ interface Particle {
 
 const particles: Particle[] = []
 
-function Letter({ char, index, mouseX, mouseY, onExplode }: { char: string; index: number; mouseX: any; mouseY: any; onExplode: (x: number, y: number) => void }) {
+function Letter({ char, mouseX, mouseY, onExplode }: { char: string; mouseX: any; mouseY: any; onExplode: (x: number, y: number) => void }) {
   const ref = useRef<HTMLSpanElement>(null)
   const centerX = useMotionValue(0)
   const centerY = useMotionValue(0)
@@ -25,7 +25,7 @@ function Letter({ char, index, mouseX, mouseY, onExplode }: { char: string; inde
     centerY.set(rect.top + rect.height / 2)
   }, [])
 
-  const blur = useTransform([mouseX, mouseY, centerX, centerY], ([mx, my, cx, cy]) => {
+  const blur = useTransform([mouseX, mouseY, centerX, centerY], ([mx, my, cx, cy]: number[]) => {
     const distance = Math.hypot(mx - cx, my - cy)
     const blurValue = Math.min((distance / 500) * 12, 12)
     return `blur(${blurValue}px)`
@@ -212,7 +212,7 @@ function App() {
               <div className="relative">
                 <h1 className="text-8xl font-bold tracking-wider text-[#1C1C1C] select-none" style={{ fontFamily: "'Playfair Display', serif" }}>
                   {text.split('').map((char, i) => (
-                    <Letter key={i} char={char} index={i} mouseX={mouseX} mouseY={mouseY} onExplode={createExplosion} />
+                    <Letter key={i} char={char} mouseX={mouseX} mouseY={mouseY} onExplode={createExplosion} />
                   ))}
                 </h1>
 
