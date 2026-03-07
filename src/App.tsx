@@ -152,13 +152,15 @@ function App() {
   }, [])
 
   const galleryItems = [
-    { img: 1, aspect: '210/297' },
-    { img: 2, aspect: '210/297' },
-    { img: 3, aspect: '210/297' },
-    { img: 4, aspect: '210/297' },
-    { img: 5, aspect: '210/297' },
-    { img: 6, aspect: '210/297' },
-    { img: 7, aspect: '210/297' },
+    { img: 1, aspect: '210/297', ext: 'jpg' },
+    { img: 2, aspect: '210/297', ext: 'jpg' },
+    { img: 3, aspect: '210/297', ext: 'jpg' },
+    { img: 4, aspect: '210/297', ext: 'jpg' },
+    { img: 5, aspect: '210/297', ext: 'jpg' },
+    { img: 6, aspect: '210/297', ext: 'jpg' },
+    { img: 7, aspect: '210/297', ext: 'jpg' },
+    { img: 1, aspect: '210/297', ext: 'png' },
+    { img: 2, aspect: '210/297', ext: 'png' },
   ]
 
   return (
@@ -288,7 +290,7 @@ function App() {
                     className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
                   >
                     <img
-                      src={`${import.meta.env.BASE_URL}gallery/${item.img}.jpg`}
+                      src={`${import.meta.env.BASE_URL}gallery/${item.img}.${item.ext || 'jpg'}`}
                       alt={`Gallery ${item.img}`}
                       className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                     />
