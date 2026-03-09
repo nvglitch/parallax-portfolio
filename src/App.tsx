@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
+import { getPortfolioItems, type PortfolioItem } from './services/wordpress'
 
 interface Particle {
   x: number
@@ -61,6 +62,8 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [buttonHidden, setButtonHidden] = useState(false)
   const [currentScene, setCurrentScene] = useState<'hero' | 'gallery'>('hero')
+  const [galleryItems, setGalleryItems] = useState<PortfolioItem[]>([])
+  const [loading, setLoading] = useState(true)
 
   const blurX = useMotionValue(0)
   const blurY = useMotionValue(0)
@@ -151,17 +154,38 @@ function App() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  const galleryItems = [
-    { img: 1, aspect: '210/297', ext: 'jpg' },
-    { img: 2, aspect: '210/297', ext: 'jpg' },
-    { img: 3, aspect: '210/297', ext: 'jpg' },
-    { img: 4, aspect: '210/297', ext: 'jpg' },
-    { img: 5, aspect: '210/297', ext: 'jpg' },
-    { img: 6, aspect: '210/297', ext: 'jpg' },
-    { img: 7, aspect: '210/297', ext: 'jpg' },
-    { img: 1, aspect: '210/297', ext: 'png' },
-    { img: 2, aspect: '210/297', ext: 'png' },
-  ]
+  useEffect(() => {
+    async function loadPortfolioItems() {
+      setLoading(true)
+      // 本地开发模式：直接使用本地图片，不调用 API
+      const localItems = [
+        { name: 'a1', ext: 'jpg' },
+        { name: 'a2', ext: 'jpg' },
+        { name: 'a3', ext: 'jpg' },
+        { name: 'a4', ext: 'jpg' },
+        { name: 'a5', ext: 'jpg' },
+        { name: 'b1', ext: 'jpg' },
+        { name: 'b2', ext: 'jpg' },
+        { name: 'b3', ext: 'jpg' },
+        { name: 'b4', ext: 'jpg' },
+        { name: 'p1', ext: 'png' },
+        { name: 'p2', ext: 'png' },
+      ].map((item, index) => ({
+        id: index + 1,
+        title: { rendered: item.name },
+        content: { rendered: '' },
+        featured_image_url: `/gallery/${item.name}.${item.ext}`,
+        meta: {
+          aspect_ratio: '210/297',
+          order: index
+        }
+      }))
+
+      setGalleryItems(localItems)
+      setLoading(false)
+    }
+    loadPortfolioItems()
+  }, [])
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#F9F8F6]">
@@ -278,25 +302,98 @@ function App() {
                 [ ← BACK TO HOME ]
               </button>
 
-              <div className="mb-8 h-6 pointer-events-none" style={{
-                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 8px, #6667AB 8px, #6667AB 9px)',
-                opacity: 0.15
-              }} />
+              {loading ? (
+                <div className="text-center text-[#1C1C1C]/60">Loading portfolio...</div>
+              ) : (
+                <>
+                  {/* Amazon Section */}
+                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('a')).length > 0 && (
+                    <div className="mb-20">
+                      <div className="flex items-center justify-center mb-12 gap-8">
+                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6667AB]/30 to-[#6667AB]/30" />
+                        <h2 className="text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          Amazon
+                        </h2>
+                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6667AB]/30 to-[#6667AB]/30" />
+                      </div>
+                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+                        {galleryItems
+                          .filter(item => item.title.rendered.toLowerCase().startsWith('a'))
+                          .map((item) => (
+                            <div
+                              key={item.id}
+                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
+                            >
+                              <img
+                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/a1.jpg`}
+                                alt={item.title.rendered}
+                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
 
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
-                {galleryItems.map((item, i) => (
-                  <div
-                    key={i}
-                    className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
-                  >
-                    <img
-                      src={`${import.meta.env.BASE_URL}gallery/${item.img}.${item.ext || 'jpg'}`}
-                      alt={`Gallery ${item.img}`}
-                      className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
-                  </div>
-                ))}
-              </div>
+                  {/* Alibaba Section */}
+                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('b')).length > 0 && (
+                    <div className="mb-20">
+                      <div className="flex items-center justify-center mb-12 gap-8">
+                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#FFBE98]/40 to-[#FFBE98]/40" />
+                        <h2 className="text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          Alibaba
+                        </h2>
+                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#FFBE98]/40 to-[#FFBE98]/40" />
+                      </div>
+                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+                        {galleryItems
+                          .filter(item => item.title.rendered.toLowerCase().startsWith('b'))
+                          .map((item) => (
+                            <div
+                              key={item.id}
+                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
+                            >
+                              <img
+                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/b1.jpg`}
+                                alt={item.title.rendered}
+                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Poster Section */}
+                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('p')).length > 0 && (
+                    <div className="mb-20">
+                      <div className="flex items-center justify-center mb-12 gap-8">
+                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#1C1C1C]/20 to-[#1C1C1C]/20" />
+                        <h2 className="text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          Poster
+                        </h2>
+                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#1C1C1C]/20 to-[#1C1C1C]/20" />
+                      </div>
+                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+                        {galleryItems
+                          .filter(item => item.title.rendered.toLowerCase().startsWith('p'))
+                          .map((item) => (
+                            <div
+                              key={item.id}
+                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
+                            >
+                              <img
+                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/p1.png`}
+                                alt={item.title.rendered}
+                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </motion.section>
         )}

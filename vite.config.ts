@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/parallax-portfolio/',
+  base: '/parallax-portfolio/',  // GitHub Pages 需要仓库名作为路径
   plugins: [react(), tailwindcss()],
 })
