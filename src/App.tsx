@@ -208,17 +208,17 @@ function App() {
 
       <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ x: springBlurX, y: springBlurY }}>
         <div
-          className="absolute top-1/4 left-1/4 w-[800px] h-[800px] rounded-full opacity-40"
+          className="absolute top-1/4 left-1/4 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] md:w-[800px] md:h-[800px] rounded-full opacity-40"
           style={{
             background: 'radial-gradient(circle, #FFBE98 0%, transparent 70%)',
-            filter: 'blur(100px)',
+            filter: 'blur(80px)',
           }}
         />
         <div
-          className="absolute bottom-1/3 right-1/4 w-[900px] h-[900px] rounded-full opacity-35"
+          className="absolute bottom-1/3 right-1/4 w-[450px] h-[450px] sm:w-[700px] sm:h-[700px] md:w-[900px] md:h-[900px] rounded-full opacity-35"
           style={{
             background: 'radial-gradient(circle, #6667AB 0%, transparent 70%)',
-            filter: 'blur(100px)',
+            filter: 'blur(80px)',
           }}
         />
       </motion.div>
