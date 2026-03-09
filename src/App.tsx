@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
-import { getPortfolioItems, type PortfolioItem } from './services/wordpress'
+import type { PortfolioItem } from './services/wordpress'
 
 interface Particle {
   x: number
