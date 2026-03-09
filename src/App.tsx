@@ -563,8 +563,8 @@ function App() {
                     ))}
                   </div>
                   <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-[#1C1C1C]/60" style={{ fontFamily: "'Noto Sans SC', sans-serif" }}>
-                    <p className="mb-2"><span className="font-semibold text-[#1C1C1C]/80">设计软件：</span> Photoshop · Adobe Illustrator · Figma</p>
-                    <p><span className="font-semibold text-[#1C1C1C]/80">3D工具：</span> Cinema 4D · Blender · Rhino · Keyshot · Octane</p>
+                    <p className="mb-2"><span className="font-semibold text-[#1C1C1C]/80">设计软件：</span> Photoshop · Adobe Illustrator · Figma · ComfyUI · Procreate</p>
+                    <p><span className="font-semibold text-[#1C1C1C]/80">3D工具：</span> Cinema 4D · Blender · Rhino · SolidWorks · Keyshot · Octane</p>
                   </div>
                 </div>
 
