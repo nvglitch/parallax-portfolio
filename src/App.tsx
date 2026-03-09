@@ -174,7 +174,7 @@ function App() {
         id: index + 1,
         title: { rendered: item.name },
         content: { rendered: '' },
-        featured_image_url: `/gallery/${item.name}.${item.ext}`,
+        featured_image_url: `${import.meta.env.BASE_URL}gallery/${item.name}.${item.ext}`,
         meta: {
           aspect_ratio: '210/297',
           order: index
