@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
-import type { PortfolioItem } from './services/wordpress'
 import NoiseOverlay from './components/NoiseOverlay'
-import BentoGallery from './components/BentoGallery'
+import Portfolio from './components/Portfolio'
 
 interface Particle {
   x: number
@@ -65,8 +64,6 @@ function App() {
   const [buttonHidden, setButtonHidden] = useState(false)
   const [aboutButtonHidden, setAboutButtonHidden] = useState(false)
   const [currentScene, setCurrentScene] = useState<'hero' | 'gallery' | 'about'>('hero')
-  const [galleryItems, setGalleryItems] = useState<PortfolioItem[]>([])
-  const [loading, setLoading] = useState(true)
 
   const blurX = useMotionValue(0)
   const blurY = useMotionValue(0)
@@ -169,39 +166,6 @@ function App() {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  useEffect(() => {
-    async function loadPortfolioItems() {
-      setLoading(true)
-      // 本地开发模式：直接使用本地图片，不调用 API
-      const localItems = [
-        { name: 'a1', ext: 'jpg' },
-        { name: 'a2', ext: 'jpg' },
-        { name: 'a3', ext: 'jpg' },
-        { name: 'a4', ext: 'jpg' },
-        { name: 'a5', ext: 'jpg' },
-        { name: 'b1', ext: 'jpg' },
-        { name: 'b2', ext: 'jpg' },
-        { name: 'b3', ext: 'jpg' },
-        { name: 'b4', ext: 'jpg' },
-        { name: 'p1', ext: 'png' },
-        { name: 'p2', ext: 'png' },
-      ].map((item, index) => ({
-        id: index + 1,
-        title: { rendered: item.name },
-        content: { rendered: '' },
-        featured_image_url: `${import.meta.env.BASE_URL}gallery/${item.name}.${item.ext}`,
-        meta: {
-          aspect_ratio: '210/297',
-          order: index
-        }
-      }))
-
-      setGalleryItems(localItems)
-      setLoading(false)
-    }
-    loadPortfolioItems()
   }, [])
 
   return (
@@ -334,38 +298,7 @@ function App() {
                 [ ← BACK TO HOME ]
               </button>
 
-              {loading ? (
-                <div className="text-center text-[#1C1C1C]/60">Loading portfolio...</div>
-              ) : (
-                <>
-                  {/* Amazon Section */}
-                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('a')).length > 0 && (
-                    <BentoGallery
-                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('a'))}
-                      title="Amazon"
-                      accentColor="#6667AB"
-                    />
-                  )}
-
-                  {/* Alibaba Section */}
-                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('b')).length > 0 && (
-                    <BentoGallery
-                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('b'))}
-                      title="Alibaba"
-                      accentColor="#FFBE98"
-                    />
-                  )}
-
-                  {/* Poster Section */}
-                  {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('p')).length > 0 && (
-                    <BentoGallery
-                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('p'))}
-                      title="Poster"
-                      accentColor="#1C1C1C"
-                    />
-                  )}
-                </>
-              )}
+              <Portfolio />
             </div>
           </motion.section>
         )}
