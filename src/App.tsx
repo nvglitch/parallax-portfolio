@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
 import type { PortfolioItem } from './services/wordpress'
+import NoiseOverlay from './components/NoiseOverlay'
+import BentoGallery from './components/BentoGallery'
 
 interface Particle {
   x: number
@@ -206,6 +208,9 @@ function App() {
     <div className="relative w-screen h-screen overflow-hidden bg-[#F9F8F6]">
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-50" />
 
+      {/* 全局噪点质感层 */}
+      <NoiseOverlay />
+
       <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ x: springBlurX, y: springBlurY }}>
         <div
           className="absolute top-1/4 left-1/4 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] md:w-[800px] md:h-[800px] rounded-full opacity-40"
@@ -222,15 +227,6 @@ function App() {
           }}
         />
       </motion.div>
-
-      <div className="fixed inset-0 pointer-events-none z-10 opacity-50 mix-blend-multiply">
-        <svg className="w-full h-full">
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noise)" />
-        </svg>
-      </div>
 
       <AnimatePresence mode="wait">
         {currentScene === 'hero' && (
@@ -344,89 +340,29 @@ function App() {
                 <>
                   {/* Amazon Section */}
                   {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('a')).length > 0 && (
-                    <div className="mb-20">
-                      <div className="flex items-center justify-center mb-8 sm:mb-10 md:mb-12 gap-4 sm:gap-6 md:gap-8">
-                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#6667AB]/30 to-[#6667AB]/30" />
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
-                          Amazon
-                        </h2>
-                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#6667AB]/30 to-[#6667AB]/30" />
-                      </div>
-                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
-                        {galleryItems
-                          .filter(item => item.title.rendered.toLowerCase().startsWith('a'))
-                          .map((item) => (
-                            <div
-                              key={item.id}
-                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
-                            >
-                              <img
-                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/a1.jpg`}
-                                alt={item.title.rendered}
-                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                              />
-                            </div>
-                          ))}
-                      </div>
-                    </div>
+                    <BentoGallery
+                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('a'))}
+                      title="Amazon"
+                      accentColor="#6667AB"
+                    />
                   )}
 
                   {/* Alibaba Section */}
                   {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('b')).length > 0 && (
-                    <div className="mb-20">
-                      <div className="flex items-center justify-center mb-8 sm:mb-10 md:mb-12 gap-4 sm:gap-6 md:gap-8">
-                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#FFBE98]/40 to-[#FFBE98]/40" />
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
-                          Alibaba
-                        </h2>
-                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#FFBE98]/40 to-[#FFBE98]/40" />
-                      </div>
-                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
-                        {galleryItems
-                          .filter(item => item.title.rendered.toLowerCase().startsWith('b'))
-                          .map((item) => (
-                            <div
-                              key={item.id}
-                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
-                            >
-                              <img
-                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/b1.jpg`}
-                                alt={item.title.rendered}
-                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                              />
-                            </div>
-                          ))}
-                      </div>
-                    </div>
+                    <BentoGallery
+                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('b'))}
+                      title="Alibaba"
+                      accentColor="#FFBE98"
+                    />
                   )}
 
                   {/* Poster Section */}
                   {galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('p')).length > 0 && (
-                    <div className="mb-20">
-                      <div className="flex items-center justify-center mb-8 sm:mb-10 md:mb-12 gap-4 sm:gap-6 md:gap-8">
-                        <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#1C1C1C]/20 to-[#1C1C1C]/20" />
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wider text-[#1C1C1C]" style={{ fontFamily: "'Playfair Display', serif" }}>
-                          Poster
-                        </h2>
-                        <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#1C1C1C]/20 to-[#1C1C1C]/20" />
-                      </div>
-                      <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
-                        {galleryItems
-                          .filter(item => item.title.rendered.toLowerCase().startsWith('p'))
-                          .map((item) => (
-                            <div
-                              key={item.id}
-                              className="break-inside-avoid mb-6 bg-transparent border-[1px] border-[#1C1C1C]/30 hover:border-[#1C1C1C]/80 transition-colors duration-300 rounded-sm overflow-hidden p-2 group"
-                            >
-                              <img
-                                src={item.featured_image_url || `${import.meta.env.BASE_URL}gallery/p1.png`}
-                                alt={item.title.rendered}
-                                className="w-full h-auto block grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                              />
-                            </div>
-                          ))}
-                      </div>
-                    </div>
+                    <BentoGallery
+                      items={galleryItems.filter(item => item.title.rendered.toLowerCase().startsWith('p'))}
+                      title="Poster"
+                      accentColor="#1C1C1C"
+                    />
                   )}
                 </>
               )}
